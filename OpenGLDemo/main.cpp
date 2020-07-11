@@ -32,6 +32,7 @@ GLShaderManager     shaderManager; // 存储着色器管理类工具类
 
 //标记：背面剔除、深度测试
 int iCull = 0;
+int iDepth = 0;
 
 /// 窗口大小改变时回调
 /// @param w 窗口宽度
@@ -96,6 +97,12 @@ void RenderScene(void) {
      } else {
          glDisable(GL_CULL_FACE);
      }
+    
+    //根据设置iDepth标记来判断是否开启深度测试
+    if(iDepth)
+        glEnable(GL_DEPTH_TEST);
+    else
+        glDisable(GL_DEPTH_TEST);
      
      //2.把摄像机矩阵压入模型矩阵中
      modelViewMatix.PushMatrix(viewFrame);
@@ -138,6 +145,9 @@ void ProcessMenu(int value)
         case 1:
             iCull = !iCull;
             break;
+        case 2:
+            iDepth = !iDepth;
+            break;
     }
     // 刷新
     glutPostRedisplay();
@@ -147,6 +157,7 @@ void ProcessMenu(int value)
 void createMenu() {
     glutCreateMenu(ProcessMenu);
     glutAddMenuEntry("Toggle cull backface", 1);
+    glutAddMenuEntry("Toggle depth test", 2);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
